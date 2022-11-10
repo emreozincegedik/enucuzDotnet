@@ -42,7 +42,7 @@ public class BaseScraper
 
         // options.AddArgument("--headless");
 
-        driver = new ChromeDriver("D:\\Torrent\\chromedriver_win32", options);
+        driver = new ChromeDriver("C:\\Coding\\Coding\\Dotnet\\enucuzDotnet", options);
         // driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(3);
 
 

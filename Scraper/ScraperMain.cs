@@ -15,6 +15,9 @@ public class ScraperMain
         {
             this.websiteList = supportedWebsiteList;
         }
+        {
+            this.websiteList = supportedWebsiteList;
+        }
     }
     public List<ScrapeModel> scrape()
     {

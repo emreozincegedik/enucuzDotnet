@@ -14,9 +14,13 @@ public class ScrapeController : ControllerBase
         _logger = logger;
     }
 
-    [HttpPost(Name = "GetScraper")]
-    public IEnumerable<ScrapeModel> Post(ScrapeQuery queryObj)
+    [HttpGet(Name = "GetScraper")]
+    public IEnumerable<ScrapeModel> Get([FromQuery]ScrapeQuery queryObj )
     {
+        if (queryObj.website.Count==1 && queryObj.website[0]==null)
+        {
+            queryObj.website = new List<string>();
+        }
         Stopwatch stopWatch = new Stopwatch();
         stopWatch.Start();
         // Thread.Sleep(10000);

@@ -12,7 +12,7 @@ public class Database
         {
             var dtTable = new DataTable();
 
-            using (var connection = new MySqlConnection("Server=localhost; database=enucuz; UID='root'; password=''"))
+            using (var connection = new MySqlConnection("Server=localhost; database=enucuz; UID='root'; password='123456789'"))
             {
                 using (MySqlCommand command = new MySqlCommand(srQuery, connection))
                 {
