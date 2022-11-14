@@ -17,10 +17,10 @@ public class ScrapeController : ControllerBase
     [HttpGet(Name = "GetScraper")]
     public IEnumerable<ScrapeModel> Get([FromQuery] ScrapeQuery queryObj)
     {
-        bool test = false;
+        bool test = true;
         if (test)
         {
-            return new N11(queryObj.query).scrape();
+            return new Amazon(queryObj.query).scrape();
         }
         else
         {

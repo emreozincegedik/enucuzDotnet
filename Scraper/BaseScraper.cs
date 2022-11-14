@@ -1,3 +1,4 @@
+using System.Globalization;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
@@ -7,7 +8,7 @@ public class BaseScraper
 {
 
     IWebDriver driver;
-    List<IWebElement> cardSelectorList;
+
     List<ScrapeModel> itemList;
     ChromeOptions options;
     protected string url { get; set; }
@@ -45,10 +46,6 @@ public class BaseScraper
         driver = new ChromeDriver(Directory.GetCurrentDirectory(), options);
         // driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(3);
 
-
-
-
-        cardSelectorList = new List<IWebElement>();
         itemList = new List<ScrapeModel>();
     }
 
@@ -63,24 +60,38 @@ public class BaseScraper
     Double priceFix(String price)
     {
         price = price.Replace("TL", "").Trim().Replace(".", "").Replace(",", ".");
-        Double t = Double.Parse(price);
+        Double t = Double.Parse(price, new CultureInfo("en-EN"));
         return t;
+    }
+    void scrollToBottom()
+    {
+        int scroll_page = 0;
+        while (scroll_page < 2000)
+        {
+
+            ((IJavaScriptExecutor)driver).ExecuteScript(
+                "window.scrollTo(0," + scroll_page.ToString() + ");");
+            scroll_page += 200;
+            System.Threading.Thread.Sleep(25);
+        }
     }
     public List<ScrapeModel> scrape()
     {
         driver.Navigate().GoToUrl(url);
         // driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(5);
-        // System.Threading.Thread.Sleep(3000);
+        System.Threading.Thread.Sleep(1000);
         WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(3));
-        cardSelectorList = wait.Until(e => e.FindElements(By.CssSelector(this.cardSelector))).ToList<IWebElement>();
+        wait.Until(e => e.FindElement(By.CssSelector(this.cardSelector)));
         ((IJavaScriptExecutor)driver).ExecuteScript("window.stop();");
+        scrollToBottom();
+        List<IWebElement> cardSelectorList = driver.FindElements(By.CssSelector(this.cardSelector)).ToList<IWebElement>();
 
         Parallel.For(0, cardSelectorList.Count > 20 ? 20 : cardSelectorList.Count, i =>
         {
-            var item = cardSelectorList[i];
             ScrapeModel scr = new ScrapeModel();
-            scr.url = item.FindElement(By.CssSelector("a")).GetAttribute("href");
             scr.website = this.GetType().ToString().ToLower();
+            var item = cardSelectorList[i];
+            scr.url = item.FindElement(By.CssSelector("a")).GetAttribute("href");
             scr.name = item.FindElement(
                 By.CssSelector(nameSelector)).Text;
 
@@ -124,7 +135,7 @@ public class BaseScraper
                     }
                 }
             }
-            if (scr.price != 0)
+            if (scr.price != 0 && itemList.Count <= 20)
             {
                 itemList.Add(scr);
             }
