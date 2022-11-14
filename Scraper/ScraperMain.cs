@@ -3,27 +3,27 @@ public class ScraperMain
     string query { get; set; }
     List<ScrapeModel> itemList { get; set; }
     List<string> websiteList { get; set; }
-
-    List<string> supportedWebsiteList = getFiles();
+    public static List<string> fileList = new List<string> { "amazon", "ciceksepeti", "hepsiburada", "migros", "n11", "pazarama", "pttavm", "trendyol" };
+    // List<string> supportedWebsiteList = getFiles();
     public ScraperMain(ScrapeQuery queries)
     {
 
         this.query = queries.query;
         this.itemList = new List<ScrapeModel>();
-        this.websiteList = queries.website ?? supportedWebsiteList;
+        this.websiteList = queries.website ?? fileList;
         if (this.websiteList.Count == 0)
         {
-            this.websiteList = supportedWebsiteList;
+            this.websiteList = fileList;
         }
         {
-            this.websiteList = supportedWebsiteList;
+            this.websiteList = fileList;
         }
     }
     public List<ScrapeModel> scrape()
     {
-        Parallel.For(0, supportedWebsiteList.Count, i =>
+        Parallel.For(0, fileList.Count, i =>
         {
-            string website = supportedWebsiteList[i];
+            string website = fileList[i];
             Type elementType = Type.GetType(FirstCharToUpper(website));
             // Type baseScraper = typeof(BaseScraper).MakeGenericType(new Type[] { elementType });
 
@@ -44,7 +44,7 @@ public class ScraperMain
     private static List<string> getFiles()
     {
         string a = System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory();
-        List<string> fileList = new List<string> { "amazon", "ciceksepeti", "hepsiburada", "migros", "n11", "pazarama", "pttavm", "trendyol" };
+
         // string sourceDir = Directory.GetCurrentDirectory() + @"\Scraper\websites";
 
         // string[] files = Directory.GetFiles(sourceDir);
