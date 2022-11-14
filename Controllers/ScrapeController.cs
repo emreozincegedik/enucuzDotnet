@@ -17,6 +17,7 @@ public class ScrapeController : ControllerBase
     [HttpGet(Name = "GetScraper")]
     public IEnumerable<ScrapeModel> Get([FromQuery] ScrapeQuery queryObj)
     {
+        queryObj.website = queryObj.website.Distinct().ToList();
         bool test = true;
         if (test)
         {
