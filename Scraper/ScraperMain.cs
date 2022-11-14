@@ -44,15 +44,15 @@ public class ScraperMain
     private static List<string> getFiles()
     {
         string a = System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory();
-        List<string> fileList = new List<string>();
-        string sourceDir = Directory.GetCurrentDirectory() + @"\Scraper\websites";
+        List<string> fileList = new List<string> { "amazon", "ciceksepeti", "hepsiburada", "migros", "n11", "pazarama", "pttavm", "trendyol" };
+        // string sourceDir = Directory.GetCurrentDirectory() + @"\Scraper\websites";
 
-        string[] files = Directory.GetFiles(sourceDir);
+        // string[] files = Directory.GetFiles(sourceDir);
 
-        foreach (string file in files)
-        {
-            fileList.Add(file.Replace(".cs", "").Replace(sourceDir + @"\", "").ToLower());
-        }
+        // foreach (string file in files)
+        // {
+        //     fileList.Add(file.Replace(".cs", "").Replace(sourceDir + @"\", "").ToLower());
+        // }
 
         return fileList;
     }

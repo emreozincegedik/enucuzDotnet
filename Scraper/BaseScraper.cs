@@ -42,8 +42,9 @@ public class BaseScraper
 
         // options.AddArgument("--headless");
 
-        driver = new ChromeDriver("C:\\Coding\\Coding\\Dotnet\\enucuzDotnet", options);
+        driver = new ChromeDriver(Directory.GetCurrentDirectory(), options);
         // driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(3);
+
 
 
 
@@ -68,10 +69,13 @@ public class BaseScraper
     public List<ScrapeModel> scrape()
     {
         driver.Navigate().GoToUrl(url);
-        WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(4));
+        // driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(5);
+        // System.Threading.Thread.Sleep(3000);
+        WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(3));
         cardSelectorList = wait.Until(e => e.FindElements(By.CssSelector(this.cardSelector))).ToList<IWebElement>();
+        ((IJavaScriptExecutor)driver).ExecuteScript("window.stop();");
 
-        Parallel.For(0, cardSelectorList.Count, i =>
+        Parallel.For(0, cardSelectorList.Count > 20 ? 20 : cardSelectorList.Count, i =>
         {
             var item = cardSelectorList[i];
             ScrapeModel scr = new ScrapeModel();
@@ -91,6 +95,7 @@ public class BaseScraper
             }
             try
             {
+                // scr.image = wait.Until(e => e.FindElement(By.CssSelector("img")).GetAttribute("src"));
                 scr.image = item.FindElement(By.CssSelector("img")).GetAttribute("src");
                 if (scr.image.Contains("gif"))
                 {
@@ -102,6 +107,7 @@ public class BaseScraper
             {
                 try
                 {
+                    // scr.image = wait.Until(e => e.FindElement(By.CssSelector("picture")).GetAttribute("srcset"));
                     scr.image = item.FindElement(By.CssSelector("picture")).GetAttribute("srcset");
                 }
                 catch (System.Exception e2)
