@@ -77,15 +77,25 @@ public class BaseScraper
     }
     public List<ScrapeModel> scrape()
     {
-        driver.Navigate().GoToUrl(url);
-        // driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(5);
-        System.Threading.Thread.Sleep(1000);
-        WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(3));
-        wait.Until(e => e.FindElement(By.CssSelector(this.cardSelector)));
-        ((IJavaScriptExecutor)driver).ExecuteScript("window.stop();");
-        scrollToBottom();
-        List<IWebElement> cardSelectorList = driver.FindElements(By.CssSelector(this.cardSelector)).ToList<IWebElement>();
+        List<IWebElement> cardSelectorList;
+        while (true)
+        {
+            try
+            {
 
+                driver.Navigate().GoToUrl(url);
+                // driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(5);
+                System.Threading.Thread.Sleep(1000);
+                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(3));
+                wait.Until(e => e.FindElement(By.CssSelector(this.cardSelector)));
+                ((IJavaScriptExecutor)driver).ExecuteScript("window.stop();");
+                scrollToBottom();
+                cardSelectorList = driver.FindElements(By.CssSelector(this.cardSelector)).ToList<IWebElement>();
+                break;
+            }
+            catch (Exception)
+            { }
+        }
         Parallel.For(0, cardSelectorList.Count > 20 ? 20 : cardSelectorList.Count, i =>
         {
             ScrapeModel scr = new ScrapeModel();

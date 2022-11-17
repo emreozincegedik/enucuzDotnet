@@ -4,7 +4,6 @@ public class ScraperMain
     List<ScrapeModel> itemList { get; set; }
     List<string> websiteList { get; set; }
     public static List<string> fileList = new List<string> { "amazon", "ciceksepeti", "hepsiburada", "migros", "n11", "pazarama", "pttavm", "trendyol" };
-    // List<string> supportedWebsiteList = getFiles();
     public ScraperMain(ScrapeQuery queries)
     {
 
@@ -25,7 +24,6 @@ public class ScraperMain
         {
             string website = fileList[i];
             Type elementType = Type.GetType(FirstCharToUpper(website));
-            // Type baseScraper = typeof(BaseScraper).MakeGenericType(new Type[] { elementType });
 
             BaseScraper scraper = (BaseScraper)Activator.CreateInstance(elementType, new object[] { this.query });
 
@@ -41,21 +39,6 @@ public class ScraperMain
         return itemList;
     }
 
-    private static List<string> getFiles()
-    {
-        string a = System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory();
-
-        // string sourceDir = Directory.GetCurrentDirectory() + @"\Scraper\websites";
-
-        // string[] files = Directory.GetFiles(sourceDir);
-
-        // foreach (string file in files)
-        // {
-        //     fileList.Add(file.Replace(".cs", "").Replace(sourceDir + @"\", "").ToLower());
-        // }
-
-        return fileList;
-    }
     private string FirstCharToUpper(string input) =>
         input switch
         {
